@@ -54,6 +54,23 @@ static int cmd_q(char *args) {
 
 static int cmd_help(char *args);
 
+static int cmd_si(char *args) {
+  char *arg = strtok(NULL, " ");
+  if (arg == NULL) {
+    cpu_exec(1);
+  } else {
+    cpu_exec(atoi(arg));
+  }
+  return 0;
+}
+static int cmd_info(char *args){
+  return 1;
+}
+static int cmd_mem(char *args){
+  return 1;
+}
+
+
 static struct {
   const char *name;
   const char *description;
@@ -62,7 +79,9 @@ static struct {
   { "help", "Display information about all supported commands", cmd_help },
   { "c", "Continue the execution of the program", cmd_c },
   { "q", "Exit NEMU", cmd_q },
-
+  {"si [N]", "Execute N instructions and pause, default 1", cmd_si},
+  {"info SUBCMD", "info r: Print register; info w: Print watchpoint", cmd_info},
+  {"x N EXPR", "Use EXPR as the starting memory address, output N 4 bytes in hex", cmd_mem},
   /* TODO: Add more commands */
 
 };
