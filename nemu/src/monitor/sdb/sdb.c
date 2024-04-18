@@ -64,7 +64,8 @@ static int cmd_si(char *args) {
   return 0;
 }
 static int cmd_info(char *args){
-  return 1;
+  isa_reg_display();
+  return 0;
 }
 static int cmd_mem(char *args){
   return 1;
