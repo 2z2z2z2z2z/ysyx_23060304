@@ -15,17 +15,18 @@
 
 #include <isa.h>
 #include <cpu/cpu.h>
+#include <memory/paddr.h>
 #include <readline/readline.h>
 #include <readline/history.h>
 #include "sdb.h"
-
 static int is_batch_mode = false;
 
 void init_regex();
+
 void init_wp_pool();
 
 /* We use the `readline' library to provide more flexibility to read from stdin. */
-static char* rl_gets() {
+static char *rl_gets() {
   static char *line_read = NULL;
 
   if (line_read) {
@@ -63,12 +64,26 @@ static int cmd_si(char *args) {
   }
   return 0;
 }
-static int cmd_info(char *args){
-  isa_reg_display();
+
+static int cmd_info(char *args) {
+  char subcommand;
+  sscanf(args, "%c", &subcommand);
+  if (subcommand == 'r'){
+    isa_reg_display();
+  } else {
+    printf("unknown subcommand");
+  }
   return 0;
 }
-static int cmd_mem(char *args){
-  return 1;
+
+static int cmd_mem(char *args) {
+  unsigned int start_addr, len;
+  sscanf(args,"%d%x", &len, &start_addr);
+  for (int i = 0; i < len; ++i) {
+    printf("%x: %x", start_addr, paddr_read(start_addr, 4));
+    start_addr = start_addr + 4;
+  }
+  return 0;
 }
 
 
