@@ -97,7 +97,7 @@ static struct {
   { "q", "Exit NEMU", cmd_q },
   {"si", "si [N]: Execute N instructions and pause, default 1", cmd_si},
   {"info", "info r: Print register; info w: Print watchpoint", cmd_info},
-  {"x N EXPR", "Use EXPR as the starting memory address, output N 4 bytes in hex", cmd_mem},
+  {"x", "Use EXPR as the starting memory address, output N 4 bytes in hex", cmd_mem},
   /* TODO: Add more commands */
 
 };
