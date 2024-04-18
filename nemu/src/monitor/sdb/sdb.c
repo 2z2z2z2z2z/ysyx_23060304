@@ -80,7 +80,7 @@ static int cmd_mem(char *args) {
   unsigned int start_addr, len;
   sscanf(args,"%d%x", &len, &start_addr);
   for (int i = 0; i < len; ++i) {
-    printf("0x%x: %x\n", start_addr, paddr_read(start_addr, 4));
+    printf("0x%x: 0x%8x\n", start_addr, paddr_read(start_addr, 4));
     start_addr = start_addr + 4;
   }
   return 0;
