@@ -71,7 +71,7 @@ static int cmd_info(char *args) {
   if (subcommand == 'r'){
     isa_reg_display();
   } else {
-    printf("unknown subcommand");
+    printf("unknown subcommand\n");
   }
   return 0;
 }
@@ -80,7 +80,7 @@ static int cmd_mem(char *args) {
   unsigned int start_addr, len;
   sscanf(args,"%d%x", &len, &start_addr);
   for (int i = 0; i < len; ++i) {
-    printf("%x: %x", start_addr, paddr_read(start_addr, 4));
+    printf("0x%x: %x\n", start_addr, paddr_read(start_addr, 4));
     start_addr = start_addr + 4;
   }
   return 0;
