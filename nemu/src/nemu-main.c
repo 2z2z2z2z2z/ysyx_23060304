@@ -38,7 +38,7 @@ int main(int argc, char *argv[]) {
   if (file == NULL){
     printf("wrong");
   }
-  while (fscanf(file, "%ud %[^\n]", &res, expr)) {
+  while (fscanf(file, "%ud %[^\\n]", &res, expr)) {
     printf("res: %d %s\n", res, expr);
   }
 
