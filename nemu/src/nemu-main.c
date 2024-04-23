@@ -35,7 +35,7 @@ int main(int argc, char *argv[]) {
   /* Start engine. */
 //  engine_start();
 
-  FILE* file = fopen("../tools/gen-expr/1.txt","r");
+  FILE* file = fopen("/home/z/ysyx-workbench/nemu/tools/gen-expr/1.txt","r");
   uint32_t res;
   if (file == NULL){
     printf("wrong");
