@@ -42,8 +42,10 @@ int main(int argc, char *argv[]) {
   while (fscanf(file, "%ud", &res)) {
     if (fgets(expression, 255, file) == NULL)
       exit(0);
+    char *c = strtok(expression, "\n");
     bool s;
-    if (expr(expression, &s) != res) {
+    printf("%s", c);
+    if (expr(c, &s) != res) {
       printf("res: %d %s", res, expression);
     }
 
