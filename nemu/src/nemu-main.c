@@ -44,8 +44,7 @@ int main(int argc, char *argv[]) {
       exit(0);
     char *c = strtok(expression, "\n");
     bool s;
-    printf("%s", c);
-    printf("res: %d %s", res, expression);
+    printf("res: %d %s\n", res, c);
     if (expr(c, &s) != res) {
       printf("wrong");
     }
