@@ -15,6 +15,7 @@
 
 #include <common.h>
 #include <stdio.h>
+#include "../src/monitor/sdb/sdb.h"
 
 void init_monitor(int, char *[]);
 
@@ -34,14 +35,18 @@ int main(int argc, char *argv[]) {
 
   FILE *file = fopen("/home/z/ysyx-workbench/nemu/tools/gen-expr/1.txt", "r");
   uint32_t res;
-  char expr[256];
+  char expression[256];
   if (file == NULL) {
     printf("wrong");
   }
   while (fscanf(file, "%ud", &res)) {
-    if (fgets(expr, 255, file) == NULL)
+    if (fgets(expression, 255, file) == NULL)
       exit(0);
-    printf("res: %d %s", res, expr);
+    bool s;
+    if (expr(expression,&s)!=res){
+      printf("res: %d %s", res, expression);
+    }
+
   }
 
   /* Start engine. */
