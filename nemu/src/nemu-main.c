@@ -32,9 +32,6 @@ int main(int argc, char *argv[]) {
   init_monitor(argc, argv);
 #endif
 
-  /* Start engine. */
-//  engine_start();
-
   FILE* file = fopen("/home/z/ysyx-workbench/nemu/tools/gen-expr/1.txt","r");
   uint32_t res;
   if (file == NULL){
@@ -43,5 +40,10 @@ int main(int argc, char *argv[]) {
   while (fscanf(file, "%ud", &res)) {
     printf("res: %d\n", res);
   }
+  
+  /* Start engine. */
+  engine_start();
+
+
   return is_exit_status_bad();
 }
