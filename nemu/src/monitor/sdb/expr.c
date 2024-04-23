@@ -154,6 +154,9 @@ bool check_parentheses(int p, int q) {
       }
       if (tokens[p].type == ')') {
         parentheses -= 1;
+        if (!parentheses && i != q) {
+          return false;
+        }
       }
       if (parentheses < 0) {
         assert(0);
