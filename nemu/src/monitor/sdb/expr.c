@@ -169,7 +169,6 @@ static int parentheses = 0;
 
 uint32_t eval(int p, int q) {
   int op = 1;
-  printf("%d%d", p, q);
   if (p > q) {
     /* Bad expression */
     assert(0);
