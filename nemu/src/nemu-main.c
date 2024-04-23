@@ -41,7 +41,7 @@ int main(int argc, char *argv[]) {
     printf("wrong");
   }
   while (fscanf(file, "%ud", &res)) {
-    printf("res: %d", res);
+    printf("res: %d\n", res);
   }
   return is_exit_status_bad();
 }
