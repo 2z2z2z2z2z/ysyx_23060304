@@ -34,13 +34,14 @@ int main(int argc, char *argv[]) {
 
   FILE* file = fopen("/home/z/ysyx-workbench/nemu/tools/gen-expr/1.txt","r");
   uint32_t res;
+  char expr[256];
   if (file == NULL){
     printf("wrong");
   }
-  while (fscanf(file, "%ud", &res)) {
-    printf("res: %d\n", res);
+  while (fscanf(file, "%ud %s", &res, expr)) {
+    printf("res: %d %s\n", res, expr);
   }
-  
+
   /* Start engine. */
   engine_start();
 
