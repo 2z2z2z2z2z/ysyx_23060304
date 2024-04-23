@@ -41,7 +41,7 @@ int main(int argc, char *argv[]) {
   while (fscanf(file, "%ud", &res)) {
     if (fgets(expr, 255, file) == NULL)
       exit(0);
-    printf("res: %d %s\n", res, expr);
+    printf("res: %d %s", res, expr);
   }
 
   /* Start engine. */
