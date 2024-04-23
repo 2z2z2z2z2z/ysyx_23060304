@@ -149,10 +149,9 @@ bool check_parentheses(int p, int q) {
   int parentheses = 0;
   if (tokens[p].type == '(' && tokens[q].type == ')') {
     for (int i = p; i <= q; ++i) {
-      if (tokens[p].type == '(') {
+      if (tokens[i].type == '(') {
         parentheses += 1;
-      }
-      if (tokens[p].type == ')') {
+      } else if (tokens[i].type == ')') {
         parentheses -= 1;
         if (parentheses == 0 && i != q) {
           return false;
