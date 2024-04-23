@@ -34,8 +34,11 @@ int main(int argc, char *argv[]) {
 
   FILE* file = fopen("../tools/gen-expr/1.txt","r");
   uint32_t res;
+  if (file == NULL){
+    printf("wrong");
+  }
   while (fscanf(file, "%ud", &res)) {
-    printf("res: %d, ", res);
+    printf("res: %d", res);
   }
   /* Start engine. */
   engine_start();
