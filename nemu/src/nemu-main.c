@@ -44,10 +44,10 @@ int main(int argc, char *argv[]) {
       exit(0);
     char *c = strtok(expression, "\n");
     bool s;
-    printf("res: %u %s\n", res, c);
     if (expr(c, &s) != res) {
       printf("wrong");
     }
+    printf("res: %u %s\n", res, c);
 
   }
 
