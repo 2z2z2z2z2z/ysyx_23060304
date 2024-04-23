@@ -31,9 +31,16 @@ int main(int argc, char *argv[]) {
 #else
   init_monitor(argc, argv);
 #endif
-//  FILE* file = fopen("../tools/gen-expr/1.txt","r");
+
   /* Start engine. */
   engine_start();
-
+  FILE* file = fopen("../tools/gen-expr/1.txt","r");
+  uint32_t res;
+  if (file == NULL){
+    printf("wrong");
+  }
+  while (fscanf(file, "%ud", &res)) {
+    printf("res: %d", res);
+  }
   return is_exit_status_bad();
 }
