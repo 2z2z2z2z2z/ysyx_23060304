@@ -32,13 +32,15 @@ int main(int argc, char *argv[]) {
   init_monitor(argc, argv);
 #endif
 
-  FILE* file = fopen("/home/z/ysyx-workbench/nemu/tools/gen-expr/1.txt","r");
+  FILE *file = fopen("/home/z/ysyx-workbench/nemu/tools/gen-expr/1.txt", "r");
   uint32_t res;
   char expr[256];
-  if (file == NULL){
+  if (file == NULL) {
     printf("wrong");
   }
-  while (fscanf(file, "%ud %[^\\n]", &res, expr)) {
+  while (fscanf(file, "%ud", &res)) {
+    if (fgets(expr, 255, file)==NULL)
+      printf("wrong");
     printf("res: %d %s\n", res, expr);
   }
 
