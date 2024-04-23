@@ -200,39 +200,39 @@ uint32_t eval(int p, int q) {
           continue;
         }
         if (tokens[i].type == '+' || tokens[i].type == '-') {
-          op = i;
+          op = i + 1;
         }
         if ((tokens[i].type == '*' || tokens[i].type == '/') && op == 1) {
-          op = i;
-        }
+          op = i + 1;
         }
       }
-      uint32_t val1 = eval(p, op - 1);
-      uint32_t val2 = eval(op + 1, q);
+    }
+    uint32_t val1 = eval(p, op - 1);
+    uint32_t val2 = eval(op + 1, q);
 
-      switch (tokens[op].type) {
-        case '+':
-          return val1 + val2;
-        case '-':
-          return val1 - val2;
-        case '*':
-          return val1 * val2;
-        case '/':
-          return val1 / val2;
-        default:
-          assert(0);
-      }
+    switch (tokens[op].type) {
+      case '+':
+        return val1 + val2;
+      case '-':
+        return val1 - val2;
+      case '*':
+        return val1 * val2;
+      case '/':
+        return val1 / val2;
+      default:
+        assert(0);
     }
   }
+}
 
-  word_t expr(char *e, bool *success) {
-    if (!make_token(e)) {
-      *success = false;
-      return 0;
-    }
-
-    /* TODO: Insert codes to evaluate the expression. */
-
-
-    return eval(0, nr_token - 1);
+word_t expr(char *e, bool *success) {
+  if (!make_token(e)) {
+    *success = false;
+    return 0;
   }
+
+  /* TODO: Insert codes to evaluate the expression. */
+
+
+  return eval(0, nr_token - 1);
+}
