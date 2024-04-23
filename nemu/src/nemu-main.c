@@ -39,8 +39,8 @@ int main(int argc, char *argv[]) {
     printf("wrong");
   }
   while (fscanf(file, "%ud", &res)) {
-    if (fgets(expr, 255, file)==NULL)
-      printf("wrong");
+    if (fgets(expr, 255, file) == NULL)
+      exit(0);
     printf("res: %d %s\n", res, expr);
   }
 
