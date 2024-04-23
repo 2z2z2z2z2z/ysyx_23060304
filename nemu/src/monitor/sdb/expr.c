@@ -21,7 +21,7 @@
 #include <regex.h>
 
 enum {
-  TK_NOTYPE = 256, TK_EQ,
+  TK_NOTYPE = 256, TK_NUM = 255, TK_EQ,
 
   /* TODO: Add more token types */
 
@@ -36,14 +36,15 @@ static struct rule {
    * Pay attention to the precedence level of different rules.
    */
 
-  {" +", TK_NOTYPE},    // spaces
-  {"\\+", '+'},         // plus
-  {"==", TK_EQ},        // equal
-  {"-", '-'},           // minus
-  {"\\*", '*'},         // multiple
-  {"/", '/'},           // divide
-  {"\\(", '('},         // (
-  {"\\)", ')'},         // )
+  {" +",     TK_NOTYPE},    // spaces
+  {"[0-9]+", TK_NUM},
+  {"\\+",    '+'},         // plus
+  {"-",      '-'},           // minus
+  {"\\*",    '*'},         // multiple
+  {"/",      '/'},           // divide
+  {"\\(",    '('},         // (
+  {"\\)",    ')'},         // )
+  {"==",     TK_EQ},        // equal
 };
 
 #define NR_REGEX ARRLEN(rules)
@@ -100,9 +101,37 @@ static bool make_token(char *e) {
          */
 
         switch (rules[i].token_type) {
-          default: TODO();
+          case TK_NOTYPE:
+            nr_token -= 1;
+            break;
+          case TK_NUM:
+            tokens[nr_token].type = TK_NUM;
+            strncpy(tokens[nr_token].str, substr_start, substr_len);
+            tokens[nr_token].str[substr_len] = '\0';
+            break;
+          case '+':
+            tokens[nr_token].type = '+';
+            break;
+          case '-':
+            tokens[nr_token].type = '-';
+            break;
+          case '*':
+            tokens[nr_token].type = '*';
+            break;
+          case '/':
+            tokens[nr_token].type = '/';
+            break;
+          case '(':
+            tokens[nr_token].type = '(';
+            break;
+          case ')':
+            tokens[nr_token].type = ')';
+            break;
+          default:
+            printf("unknown token");
+            assert(0);
         }
-
+        nr_token += 1;
         break;
       }
     }
@@ -116,6 +145,80 @@ static bool make_token(char *e) {
   return true;
 }
 
+bool check_parentheses(int p, int q) {
+  int parentheses = 0;
+  if (tokens[p].type == '(' && tokens[q].type == ')') {
+    for (int i = p; i <= q; ++i) {
+      if (tokens[p].type == '(') {
+        parentheses += 1;
+      }
+      if (tokens[p].type == ')') {
+        parentheses -= 1;
+      }
+      if (parentheses < 0) {
+        assert(0);
+      }
+    }
+    return true;
+  } else {
+    return false;
+  }
+}
+
+static int parentheses = 0;
+
+uint32_t eval(int p, int q) {
+  int op = -1;
+  if (p > q) {
+    /* Bad expression */
+    assert(0);
+  } else if (p == q) {
+    /* Single token.
+     * For now this token should be a number.
+     * Return the value of the number.
+     */
+    return atoi(tokens[p].str);
+  } else if (check_parentheses(p, q) == true) {
+    /* The expression is surrounded by a matched pair of parentheses.
+     * If that is the case, just throw away the parentheses.
+     */
+    return eval(p + 1, q - 1);
+  } else {
+    for (int i = p; i < q; ++i) {
+      if (tokens[i].type == TK_NUM) {
+        continue;
+      } else {
+        if (tokens[i].type == '(') {
+          parentheses += 1;
+        }
+        if (tokens[i].type == ')') {
+          parentheses -= 1;
+        }
+        if (parentheses) {
+          continue;
+        }
+        if (tokens[i].type == '+' || tokens[i].type == '-') {
+          op = i;
+        }
+      }
+    }
+    uint32_t val1 = eval(p, op - 1);
+    uint32_t val2 = eval(op + 1, q);
+
+    switch (tokens[op].type) {
+      case '+':
+        return val1 + val2;
+      case '-':
+        return val1 - val2;
+      case '*':
+        return val1 * val2;
+      case '/':
+        return val1 / val2;
+      default:
+        assert(0);
+    }
+  }
+}
 
 word_t expr(char *e, bool *success) {
   if (!make_token(e)) {
@@ -124,7 +227,7 @@ word_t expr(char *e, bool *success) {
   }
 
   /* TODO: Insert codes to evaluate the expression. */
-  TODO();
 
-  return 0;
+
+  return eval(0, nr_token);
 }

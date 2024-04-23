@@ -30,9 +30,50 @@ static char *code_format =
 "  printf(\"%%u\", result); "
 "  return 0; "
 "}";
+static int buf_index = 0;
+static int depth = 0;
 
 static void gen_rand_expr() {
-  buf[0] = '\0';
+  int r;
+  depth = depth + 1;
+  if (buf_index + 2 * depth > 65535) {
+    r = 0;
+  } else {
+    r = random() % 3;
+  }
+  switch (r) {
+    case 0:
+      buf[buf_index] = random() % 10 + 48;
+      buf_index += 1;
+      break;
+    case 1:
+      buf[buf_index] = '(';
+      buf_index += 1;
+      gen_rand_expr();
+      buf[buf_index] = ')';
+      buf_index += 1;
+      break;
+    default:
+      gen_rand_expr();
+      switch (random() % 4) {
+        case 0:
+          buf[buf_index] = '+';
+          break;
+        case 1:
+          buf[buf_index] = '-';
+          break;
+        case 2:
+          buf[buf_index] = '*';
+          break;
+        case 3:
+          buf[buf_index] = '/';
+          break;
+      }
+      buf_index += 1;
+      gen_rand_expr();
+      break;
+  }
+  buf[buf_index] = '\0';
 }
 
 int main(int argc, char *argv[]) {
@@ -44,6 +85,8 @@ int main(int argc, char *argv[]) {
   }
   int i;
   for (i = 0; i < loop; i ++) {
+    buf_index = 0;
+    depth = 0;
     gen_rand_expr();
 
     sprintf(code_buf, code_format, buf);
@@ -53,7 +96,7 @@ int main(int argc, char *argv[]) {
     fputs(code_buf, fp);
     fclose(fp);
 
-    int ret = system("gcc /tmp/.code.c -o /tmp/.expr");
+    int ret = system("gcc /tmp/.code.c -Werror=div-by-zero -o /tmp/.expr");
     if (ret != 0) continue;
 
     fp = popen("/tmp/.expr", "r");

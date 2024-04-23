@@ -14,10 +14,14 @@
 ***************************************************************************************/
 
 #include <common.h>
+#include <stdio.h>
 
 void init_monitor(int, char *[]);
+
 void am_init_monitor();
+
 void engine_start();
+
 int is_exit_status_bad();
 
 int main(int argc, char *argv[]) {
@@ -28,6 +32,12 @@ int main(int argc, char *argv[]) {
   init_monitor(argc, argv);
 #endif
 
+  FILE* file = fopen("../tools/gen-expr/1.txt","r");
+  uint32_t res;
+  char expr[256];
+  while (fscanf(file, "%ud%s", &res, expr)) {
+    printf("res: %d, ", res);
+  }
   /* Start engine. */
   engine_start();
 
