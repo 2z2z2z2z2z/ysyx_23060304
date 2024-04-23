@@ -26,11 +26,11 @@ int is_exit_status_bad();
 
 int main(int argc, char *argv[]) {
   /* Initialize the monitor. */
-//#ifdef CONFIG_TARGET_AM
-//  am_init_monitor();
-//#else
-//  init_monitor(argc, argv);
-//#endif
+#ifdef CONFIG_TARGET_AM
+  am_init_monitor();
+#else
+  init_monitor(argc, argv);
+#endif
 
   FILE* file = fopen("../tools/gen-expr/1.txt","r");
   uint32_t res;
