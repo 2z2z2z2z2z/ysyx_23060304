@@ -33,7 +33,7 @@ int main(int argc, char *argv[]) {
 #endif
 
   /* Start engine. */
-  engine_start();
+//  engine_start();
 
   FILE* file = fopen("../tools/gen-expr/1.txt","r");
   uint32_t res;
