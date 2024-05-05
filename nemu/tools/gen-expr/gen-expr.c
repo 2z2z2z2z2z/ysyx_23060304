@@ -24,12 +24,12 @@
 static char buf[65536] = {};
 static char code_buf[65536 + 128] = {}; // a little larger than `buf`
 static char *code_format =
-"#include <stdio.h>\n"
-"int main() { "
-"  unsigned result = %s; "
-"  printf(\"%%u\", result); "
-"  return 0; "
-"}";
+  "#include <stdio.h>\n"
+  "int main() { "
+  "  unsigned result = %s; "
+  "  printf(\"%%u\", result); "
+  "  return 0; "
+  "}";
 static int buf_index = 0;
 static int depth = 0;
 
@@ -43,7 +43,25 @@ static void gen_rand_expr() {
   }
   switch (r) {
     case 0:
-      buf[buf_index] = random() % 10 + 48;
+      switch (random() % 4) {
+        case 0:
+          buf[buf_index] = random() % 10 + 48;
+          break;
+        case 1:
+          buf[buf_index] = ' ';
+          buf_index += 1;
+          buf[buf_index] = random() % 10 + 48;
+          break;
+        case 2:
+          buf[buf_index] = '-';
+          buf_index += 1;
+          buf[buf_index] = random() % 10 + 48;
+          break;
+        default:
+          buf[buf_index] = random() % 10 + 48;
+          buf_index += 1;
+          buf[buf_index] = ' ';
+      }
       buf_index += 1;
       break;
     case 1:
@@ -84,7 +102,7 @@ int main(int argc, char *argv[]) {
     sscanf(argv[1], "%d", &loop);
   }
   int i;
-  for (i = 0; i < loop; i ++) {
+  for (i = 0; i < loop; i++) {
     buf_index = 0;
     depth = 0;
     gen_rand_expr();

@@ -18,6 +18,14 @@
 
 #include <common.h>
 
+void new_wp(char *expression);
+
+void free_wp(int i);
+
+bool watchpoint_check();
+
+void watchpoint_display();
+
 word_t expr(char *e, bool *success);
 
 #endif
