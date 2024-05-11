@@ -14,10 +14,15 @@
 ***************************************************************************************/
 
 #include <common.h>
+#include <stdio.h>
+#include "../src/monitor/sdb/sdb.h"
 
 void init_monitor(int, char *[]);
+
 void am_init_monitor();
+
 void engine_start();
+
 int is_exit_status_bad();
 
 int main(int argc, char *argv[]) {
@@ -28,8 +33,28 @@ int main(int argc, char *argv[]) {
   init_monitor(argc, argv);
 #endif
 
+
+//  FILE *file = fopen("/home/z/ysyx-workbench/nemu/tools/gen-expr/1.txt", "r");
+//  wort_t res;
+//  char expression[65536];
+//  if (file == NULL) {
+//    printf("wrong");
+//  }
+//  while (fscanf(file, "%ud", &res)) {
+//    if (fgets(expression, 65536, file) == NULL)
+//      exit(0);
+//    char *c = strtok(expression, "\n");
+//    bool s;
+//    if (expr(c, &s) != res) {
+//      printf("res: %u expr:%s wrong:%u\n", res, c, expr(c, &s));
+//      assert(0);
+//    }
+//    printf("res: %u %s\n", res, c);
+//  }
+
   /* Start engine. */
   engine_start();
+
 
   return is_exit_status_bad();
 }
