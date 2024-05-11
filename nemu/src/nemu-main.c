@@ -33,9 +33,9 @@ int main(int argc, char *argv[]) {
   init_monitor(argc, argv);
 #endif
 
-//
+
 //  FILE *file = fopen("/home/z/ysyx-workbench/nemu/tools/gen-expr/1.txt", "r");
-//  uint32_t res;
+//  wort_t res;
 //  char expression[65536];
 //  if (file == NULL) {
 //    printf("wrong");

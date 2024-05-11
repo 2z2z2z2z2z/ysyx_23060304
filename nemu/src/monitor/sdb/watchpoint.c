@@ -23,7 +23,7 @@ typedef struct watchpoint {
 
   /* TODO: Add more members if necessary */
   char expr[256];
-  uint32_t previous;
+  word_t previous;
 } WP;
 
 static WP wp_pool[NR_WP] = {};
@@ -89,7 +89,7 @@ bool watchpoint_check() {
   bool success = true;
   while (1) {
     if (wp == NULL) { break; }
-    uint32_t res = expr(wp->expr, &success);
+    word_t res = expr(wp->expr, &success);
     if (!success) { assert(0); }
     if (res != wp->previous) {
       printf("%s\n", wp->expr);

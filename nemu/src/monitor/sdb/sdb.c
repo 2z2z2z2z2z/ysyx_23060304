@@ -68,7 +68,7 @@ static int cmd_si(char *args) {
 }
 
 static int cmd_info(char *args) {
-  if (!args){
+  if (!args) {
     cmd_help("info");
     return 0;
   }
@@ -85,7 +85,7 @@ static int cmd_info(char *args) {
 }
 
 static int cmd_mem(char *args) {
-  if (!args){
+  if (!args) {
     cmd_help("x");
     return 0;
   }
@@ -103,7 +103,7 @@ static int cmd_mem(char *args) {
 }
 
 static int cmd_expr(char *args) {
-  if (!args){
+  if (!args) {
     cmd_help("p");
     return 0;
   }
@@ -117,7 +117,7 @@ static int cmd_expr(char *args) {
 }
 
 static int cmd_add_watch(char *args) {
-  if (!args){
+  if (!args) {
     cmd_help("w");
     return 0;
   }
@@ -126,7 +126,7 @@ static int cmd_add_watch(char *args) {
 }
 
 static int cmd_del_watch(char *args) {
-  if (!args){
+  if (!args) {
     cmd_help("d");
     return 0;
   }
@@ -140,15 +140,15 @@ static struct {
 
   int (*handler)(char *);
 } cmd_table[] = {
-  {"help", "Display information about all supported commands",                 cmd_help},
-  {"c",    "Continue the execution of the program",                            cmd_c},
-  {"q",    "Exit NEMU",                                                        cmd_q},
-  {"si",   "si [N]: Execute N instructions and pause, default 1",              cmd_si},
-  {"info", "info r: Print register; info w: Print watchpoint",                 cmd_info},
-  {"x",    "Use EXPR as the starting memory address, output N 4 bytes in hex", cmd_mem},
-  {"p",    "Calculate EXPR value",                                             cmd_expr},
-  {"w",    "w EXPR: add watchpoint EXPR",                                      cmd_add_watch},
-  {"d",    "d N: delete No. N watchpoind",                                     cmd_del_watch},
+  {"help", "Display information about all supported commands",                           cmd_help},
+  {"c",    "Continue the execution of the program",                                      cmd_c},
+  {"q",    "Exit NEMU",                                                                  cmd_q},
+  {"si",   "si [N]: Execute N instructions and pause, default 1",                        cmd_si},
+  {"info", "info r: Print register; info w: Print watchpoint",                           cmd_info},
+  {"x",    "x N EXPR: Use EXPR as the starting memory address, output N 4 bytes in hex", cmd_mem},
+  {"p",    "Calculate EXPR value",                                                       cmd_expr},
+  {"w",    "w EXPR: add watchpoint EXPR",                                                cmd_add_watch},
+  {"d",    "d N: delete No. N watchpoind",                                               cmd_del_watch},
   /* TODO: Add more commands */
 
 };

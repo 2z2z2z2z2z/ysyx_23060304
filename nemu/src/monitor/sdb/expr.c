@@ -19,9 +19,10 @@
  * Type 'man regex' for more information about POSIX regex functions.
  */
 #include <regex.h>
+#include "memory/paddr.h"
 
 enum {
-  TK_NOTYPE = 256, TK_NUM, TK_NEG, DEREF, TK_HEX, TK_REG, TK_NEQ, TK_AND, TK_EQ,
+  TK_NOTYPE = 256, TK_NUM, TK_NEG, TK_DEREF, TK_HEX, TK_REG, TK_NEQ, TK_AND, TK_EQ,
 
   /* TODO: Add more token types */
 
@@ -199,20 +200,25 @@ bool check_parentheses(int p, int q) {
 static int parentheses = 0;
 
 int eval(int p, int q) {
-  int op = 1;
+//  if (tokens[p].type == TK_NEG) {
+//    int i = p;
+//    while (tokens[i + 1].type != TK_NUM) {
+//      i = i + 1;
+//    }
+//    if (i == q - 1) {
+//      return (i - p) % 2 ? strtol(tokens[q].str, 0, 10) : -strtol(tokens[q].str, 0, 10);
+//    }
+//  }
+  int op = -1;
   if (p > q) {
     /* Bad expression */
     assert(0);
-  } else if (p == q || (tokens[p].type == TK_NEG && p == (q - 1))) {
+  } else if (p == q) {
     /* Single token.
      * For now this token should be a number.
      * Return the value of the number.
      */
-    if (tokens[p].type == TK_NEG) {
-      return -atoi(tokens[q].str);
-    } else {
-      return atoi(tokens[q].str);
-    }
+    return strtol(tokens[q].str, 0, 10);
   } else if (check_parentheses(p, q) == true) {
     /* The expression is surrounded by a matched pair of parentheses.
      * If that is the case, just throw away the parentheses.
@@ -220,58 +226,64 @@ int eval(int p, int q) {
     return eval(p + 1, q - 1);
   } else {
     parentheses = 0;
-    int weight = 0;
     for (int i = p; i < q; ++i) {
       if (tokens[i].type == TK_NUM) {
         continue;
-      } else {
-        if (tokens[i].type == '(') {
-          parentheses += 1;
-          continue;
-        }
-        if (tokens[i].type == ')') {
-          parentheses -= 1;
-          continue;
-        }
-        if (parentheses) {
-          continue;
-        }
-        if (tokens[i].type == '+' || tokens[i].type == '-') {
-          weight = 1;
-          op = i;
-          continue;
-        }
-        if (tokens[i].type == '*' || tokens[i].type == '/') {
-          if (weight == 0) {
-            op = i;
-          }
-          continue;
-        }
+      }
+      if (tokens[i].type == '(') {
+        parentheses += 1;
+        continue;
+      }
+      if (tokens[i].type == ')') {
+        parentheses -= 1;
+        continue;
+      }
+      if (parentheses) {
+        continue;
+      }
+      if (tokens[i].type == TK_AND) {
+        op = i;
+      } else if (tokens[op].type == TK_AND) {
+      } else if (tokens[i].type == TK_EQ || tokens[i].type == TK_NEQ) {
+        op = i;
+      } else if (tokens[op].type == TK_EQ || tokens[op].type == TK_NEQ) {
+      } else if (tokens[i].type == '+' || tokens[i].type == '-') {
+        op = i;
+      } else if (tokens[op].type == '+' || tokens[op].type == '-') {
+      } else if (tokens[i].type == '*' || tokens[i].type == '/') {
+        op = i;
       }
     }
-    int val1 = eval(p, op - 1);
-    int val2 = eval(op + 1, q);
-
-    switch (tokens[op].type) {
-      case '+':
-        return val1 + val2;
-      case '-':
-        return val1 - val2;
-      case '*':
-        return (int) val1 * val2;
-      case '/':
-        return (int) val1 / val2;
-      case TK_EQ:
-        return val1 == val2;
-      case TK_NEQ:
-        return val1 != val2;
-      case TK_AND:
-        return val1 && val2;
-      default:
-        assert(0);
+  }
+  if (op == -1) {
+    if (tokens[p].type == TK_NEG) {
+      return -eval(p + 1, q);
+    }
+    if (tokens[p].type == TK_DEREF) {
+      return paddr_read(eval(p + 1, q), 4);
     }
   }
+  int val1 = eval(p, op - 1);
+  int val2 = eval(op + 1, q);
 
+  switch (tokens[op].type) {
+    case '+':
+      return val1 + val2;
+    case '-':
+      return val1 - val2;
+    case '*':
+      return (int) val1 * val2;
+    case '/':
+      return (int) val1 / val2;
+    case TK_EQ:
+      return val1 == val2;
+    case TK_NEQ:
+      return val1 != val2;
+    case TK_AND:
+      return val1 && val2;
+    default:
+      assert(0);
+  }
 }
 
 word_t expr(char *e, bool *success) {
@@ -285,11 +297,11 @@ word_t expr(char *e, bool *success) {
 
   for (int i = 0; i < nr_token; i++) {
     if (tokens[i].type == '*' && (i == 0 || !(tokens[i - 1].type == ')' || tokens[i - 1].type == TK_NUM))) {
-      tokens[i].type = DEREF;
+      tokens[i].type = TK_DEREF;
     } else if (tokens[i].type == '-' && (i == 0 || !(tokens[i - 1].type == ')' || tokens[i - 1].type == TK_NUM))) {
       tokens[i].type = TK_NEG;
     }
   }
 
-  return (uint32_t) eval(0, nr_token - 1);
+  return (word_t) eval(0, nr_token - 1);
 }
